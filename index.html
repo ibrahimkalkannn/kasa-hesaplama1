@@ -14,13 +14,9 @@ font-family:Segoe UI,Arial,sans-serif;
 }
 
 body{
-  <div style="text-align:right;margin-bottom:15px;">
-    <button id="temaBtn" onclick="temaDegistir()">
-        🌙 Gece Modu
-    </button>
-</div>
 background:linear-gradient(135deg,#8B0000,#C1121F);
 padding:15px;
+transition:.3s;
 }
 
 .card{
@@ -30,6 +26,24 @@ background:#fff;
 border-radius:24px;
 padding:24px;
 box-shadow:0 20px 50px rgba(0,0,0,.25);
+transition:.3s;
+}
+
+.tema-alani{
+text-align:right;
+max-width:850px;
+margin:auto auto 15px auto;
+}
+
+.tema-btn{
+width:auto;
+padding:10px 18px;
+border:none;
+border-radius:12px;
+background:#fff;
+color:#B00020;
+font-weight:700;
+cursor:pointer;
 }
 
 h1{
@@ -102,10 +116,6 @@ text-align:center;
 outline:none;
 }
 
-input:focus{
-border-color:#7f0015;
-}
-
 label{
 display:block;
 margin-top:15px;
@@ -150,40 +160,63 @@ cursor:pointer;
 margin-top:15px;
 }
 
-button:hover{
-opacity:.9;
-}.dark{
-    background:#121212 !important;
+/* GECE MODU */
+
+.dark{
+background:#111 !important;
 }
 
 .dark .card{
-    background:#1f1f1f;
-    color:white;
+background:#1e1e1e;
+color:#fff;
 }
 
 .dark h1{
-    color:#ffffff;
+color:#fff;
 }
 
 .dark .box{
-    background:#2a2a2a;
-    border-color:#444;
+background:#2a2a2a;
+border-color:#444;
+}
+
+.dark .box-title{
+color:#ccc;
+}
+
+.dark .box-value{
+color:#fff;
 }
 
 .dark td{
-    background:#2a2a2a;
-    color:white;
+background:#2a2a2a;
+color:#fff;
 }
 
 .dark input{
-    background:#2a2a2a;
-    color:white;
-    border-color:#666;
+background:#2a2a2a;
+color:#fff;
+border-color:#666;
+}
+
+.dark label{
+color:#fff;
+}
+
+.dark .tema-btn{
+background:#333;
+color:#fff;
 }
 </style>
 </head>
 
 <body>
+
+<div class="tema-alani">
+<button class="tema-btn" id="temaBtn" onclick="temaDegistir()">
+🌙 Gece Modu
+</button>
+</div>
 
 <div class="card">
 
@@ -210,49 +243,18 @@ opacity:.9;
 </div>
 
 <table>
-
 <tr>
 <th>Banknot</th>
 <th>Adet</th>
 <th>Tutar</th>
 </tr>
 
-<tr>
-<td>200 TL</td>
-<td><input type="number" id="b200" placeholder="Adet"></td>
-<td id="t200">0 TL</td>
-</tr>
-
-<tr>
-<td>100 TL</td>
-<td><input type="number" id="b100" placeholder="Adet"></td>
-<td id="t100">0 TL</td>
-</tr>
-
-<tr>
-<td>50 TL</td>
-<td><input type="number" id="b50" placeholder="Adet"></td>
-<td id="t50">0 TL</td>
-</tr>
-
-<tr>
-<td>20 TL</td>
-<td><input type="number" id="b20" placeholder="Adet"></td>
-<td id="t20">0 TL</td>
-</tr>
-
-<tr>
-<td>10 TL</td>
-<td><input type="number" id="b10" placeholder="Adet"></td>
-<td id="t10">0 TL</td>
-</tr>
-
-<tr>
-<td>5 TL</td>
-<td><input type="number" id="b5" placeholder="Adet"></td>
-<td id="t5">0 TL</td>
-</tr>
-
+<tr><td>200 TL</td><td><input type="number" id="b200" placeholder="Adet"></td><td id="t200">0 TL</td></tr>
+<tr><td>100 TL</td><td><input type="number" id="b100" placeholder="Adet"></td><td id="t100">0 TL</td></tr>
+<tr><td>50 TL</td><td><input type="number" id="b50" placeholder="Adet"></td><td id="t50">0 TL</td></tr>
+<tr><td>20 TL</td><td><input type="number" id="b20" placeholder="Adet"></td><td id="t20">0 TL</td></tr>
+<tr><td>10 TL</td><td><input type="number" id="b10" placeholder="Adet"></td><td id="t10">0 TL</td></tr>
+<tr><td>5 TL</td><td><input type="number" id="b5" placeholder="Adet"></td><td id="t5">0 TL</td></tr>
 </table>
 
 <label>Metal Para</label>
@@ -290,14 +292,11 @@ const ids=['200','100','50','20','10','5'];
 let nakit=0;
 
 ids.forEach((id,index)=>{
-
 let adet=val('b'+id);
 let tutar=adet*banknot[index];
 
 document.getElementById('t'+id).innerText=para(tutar);
-
 nakit+=tutar;
-
 });
 
 nakit+=val('metal');
@@ -324,12 +323,33 @@ else{
 sonuc.className='eksik';
 sonuc.innerHTML='🔴 EKSİK KASA : ' + para(Math.abs(fark));
 }
-
 }
 
 function sifirla(){
 document.querySelectorAll('input').forEach(i=>i.value='');
 hesapla();
+}
+
+function temaDegistir(){
+
+document.body.classList.toggle("dark");
+
+const btn=document.getElementById("temaBtn");
+
+if(document.body.classList.contains("dark")){
+btn.innerHTML="☀️ Gündüz Modu";
+localStorage.setItem("tema","dark");
+}else{
+btn.innerHTML="🌙 Gece Modu";
+localStorage.setItem("tema","light");
+}
+}
+
+if(localStorage.getItem("tema")==="dark"){
+document.body.classList.add("dark");
+window.addEventListener("load",()=>{
+document.getElementById("temaBtn").innerHTML="☀️ Gündüz Modu";
+});
 }
 
 document.querySelectorAll('input').forEach(i=>{
@@ -338,24 +358,6 @@ i.addEventListener('input',hesapla);
 
 hesapla();
 
-function temaDegistir(){
-
-    document.body.classList.toggle("dark");
-
-    const btn=document.getElementById("temaBtn");
-
-    if(document.body.classList.contains("dark")){
-        btn.innerHTML="☀️ Gündüz Modu";
-        localStorage.setItem("tema","dark");
-    }else{
-        btn.innerHTML="🌙 Gece Modu";
-        localStorage.setItem("tema","light");
-    }
-}
-
-if(localStorage.getItem("tema")==="dark"){
-    document.body.classList.add("dark");
-}
 </script>
 
 </body>
