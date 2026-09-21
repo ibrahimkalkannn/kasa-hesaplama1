@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Kasa Hesaplama</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#8B0000,#C1121F);
+padding:15px;
+}
+
+.card{
+max-width:850px;
+margin:auto;
+background:#fff;
+border-radius:24px;
+padding:24px;
+box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+h1{
+text-align:center;
+color:#B00020;
+margin-bottom:10px;
+}
+
+.line{
+width:120px;
+height:4px;
+background:#B00020;
+margin:auto;
+border-radius:20px;
+margin-bottom:20px;
+}
+
+.summary{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px;
+margin-bottom:20px;
+}
+
+.box{
+background:#fafafa;
+border:2px solid #ececec;
+border-radius:16px;
+padding:15px;
+text-align:center;
+}
+
+.box-title{
+font-size:13px;
+color:#666;
+margin-bottom:5px;
+}
+
+.box-value{
+font-size:24px;
+font-weight:700;
+color:#B00020;
+}
+
+table{
+width:100%;
+border-collapse:separate;
+border-spacing:0 10px;
+}
+
+th{
+background:#B00020;
+color:#fff;
+padding:12px;
+}
+
+td{
+background:#f8fafc;
+padding:12px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:14px;
+font-size:16px;
+border:2px solid #B00020;
+border-radius:12px;
+text-align:center;
+outline:none;
+}
+
+input:focus{
+border-color:#7f0015;
+}
+
+label{
+display:block;
+margin-top:15px;
+margin-bottom:6px;
+font-weight:600;
+}
+
+#sonuc{
+margin-top:20px;
+padding:18px;
+border-radius:16px;
+font-size:24px;
+font-weight:800;
+text-align:center;
+}
+
+.tam{
+background:#e7ffe7;
+color:#0f8a0f;
+}
+
+.fazla{
+background:#fff4d4;
+color:#a56d00;
+}
+
+.eksik{
+background:#ffe7e7;
+color:#c00000;
+}
+
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+background:linear-gradient(135deg,#B00020,#D62828);
+color:#fff;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+margin-top:15px;
+}
+
+button:hover{
+opacity:.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>💰 Kasa Hesaplama</h1>
+<div class="line"></div>
+
+<div class="summary">
+
+<div class="box">
+<div class="box-title">Toplam Nakit</div>
+<div class="box-value" id="nakitKart">0 TL</div>
+</div>
+
+<div class="box">
+<div class="box-title">Torba Tutarı</div>
+<div class="box-value" id="torbaKart">0 TL</div>
+</div>
+
+<div class="box">
+<div class="box-title">Kasa Farkı</div>
+<div class="box-value" id="farkKart">0 TL</div>
+</div>
+
+</div>
+
+<table>
+
+<tr>
+<th>Banknot</th>
+<th>Adet</th>
+<th>Tutar</th>
+</tr>
+
+<tr>
+<td>200 TL</td>
+<td><input type="number" id="b200" placeholder="Adet"></td>
+<td id="t200">0 TL</td>
+</tr>
+
+<tr>
+<td>100 TL</td>
+<td><input type="number" id="b100" placeholder="Adet"></td>
+<td id="t100">0 TL</td>
+</tr>
+
+<tr>
+<td>50 TL</td>
+<td><input type="number" id="b50" placeholder="Adet"></td>
+<td id="t50">0 TL</td>
+</tr>
+
+<tr>
+<td>20 TL</td>
+<td><input type="number" id="b20" placeholder="Adet"></td>
+<td id="t20">0 TL</td>
+</tr>
+
+<tr>
+<td>10 TL</td>
+<td><input type="number" id="b10" placeholder="Adet"></td>
+<td id="t10">0 TL</td>
+</tr>
+
+<tr>
+<td>5 TL</td>
+<td><input type="number" id="b5" placeholder="Adet"></td>
+<td id="t5">0 TL</td>
+</tr>
+
+</table>
+
+<label>Metal Para</label>
+<input type="number" id="metal" placeholder="Metal Para">
+
+<label>Havale</label>
+<input type="number" id="havale" placeholder="Havale Tutarı">
+
+<label>Torba Tutarı</label>
+<input type="number" id="torba" placeholder="Torba Tutarı">
+
+<div id="sonuc" class="tam">
+✅ KASA TAM
+</div>
+
+<button onclick="sifirla()">TÜMÜNÜ SIFIRLA</button>
+
+</div>
+
+<script>
+
+function para(x){
+return x.toLocaleString('tr-TR') + ' TL';
+}
+
+function val(id){
+return Number(document.getElementById(id).value || 0);
+}
+
+function hesapla(){
+
+const banknot=[200,100,50,20,10,5];
+const ids=['200','100','50','20','10','5'];
+
+let nakit=0;
+
+ids.forEach((id,index)=>{
+
+let adet=val('b'+id);
+let tutar=adet*banknot[index];
+
+document.getElementById('t'+id).innerText=para(tutar);
+
+nakit+=tutar;
+
+});
+
+nakit+=val('metal');
+
+let genel=nakit+val('havale');
+let torba=val('torba');
+let fark=genel-torba;
+
+document.getElementById('nakitKart').innerText=para(genel);
+document.getElementById('torbaKart').innerText=para(torba);
+document.getElementById('farkKart').innerText=para(fark);
+
+const sonuc=document.getElementById('sonuc');
+
+if(fark===0){
+sonuc.className='tam';
+sonuc.innerHTML='✅ KASA TAM';
+}
+else if(fark>0){
+sonuc.className='fazla';
+sonuc.innerHTML='🟡 FAZLA KASA : ' + para(fark);
+}
+else{
+sonuc.className='eksik';
+sonuc.innerHTML='🔴 EKSİK KASA : ' + para(Math.abs(fark));
+}
+
+}
+
+function sifirla(){
+document.querySelectorAll('input').forEach(i=>i.value='');
+hesapla();
+}
+
+document.querySelectorAll('input').forEach(i=>{
+i.addEventListener('input',hesapla);
+});
+
+hesapla();
+
+</script>
+
+</body>
+</html>
